@@ -4,6 +4,7 @@ import binary_search
 import graph
 import bfs
 import dfs
+import dfs_iterative_deepening
 
 class GoodInput(unittest.TestCase):
 	def setUp(self):
@@ -15,16 +16,22 @@ class GoodInput(unittest.TestCase):
 		# graph-related search
 		self.g = graph.Graph()
 		self.nodes = [graph.Node('sid'),
-				graph.Node('meagan'),
 				graph.Node('casper'),
-				graph.Node('john')]
+				graph.Node('john'),
+				graph.Node('meagan'),
+				graph.Node('calvin'),
+				graph.Node('snowy')]
 		for n in self.nodes:
 			self.g.add_node(n)
 		self.edges = []
-		self.edges.append((self.nodes[0], self.nodes[1]))
-		self.edges.append((self.nodes[1], self.nodes[2]))
+		self.edges.append((self.nodes[0], self.nodes[3]))
+		self.edges.append((self.nodes[3], self.nodes[1]))
+		self.edges.append((self.nodes[0], self.nodes[2]))
+		self.edges.append((self.nodes[2], self.nodes[4]))
+		self.edges.append((self.nodes[4], self.nodes[1]))
 		for n1,n2 in self.edges:
 			self.g.add_edge(n1, n2)
+		self.shortest_path = ['sid', 'meagan', 'casper']
 	
 	def test_linear_search_should_find_element(self):
 		for d, idx in self.data:
@@ -48,7 +55,11 @@ class GoodInput(unittest.TestCase):
 	
 	def test_bfs_should_find_element(self):
 		start_node = self.nodes[0]
-		self.assertEqual(bfs.search(self.g, 'casper', start_node)[0], self.nodes[2])
+		self.assertEqual(bfs.search(self.g, 'casper', start_node)[0], self.nodes[1])
+	
+	def test_bfs_should_find_shortest_path(self):
+		start_node = self.nodes[0]
+		self.assertEqual(bfs.search(self.g, 'casper', start_node)[1], self.shortest_path)
 	
 	def test_bfs_should_not_find_invalid_element(self):
 		start_node = self.nodes[0]
@@ -56,12 +67,24 @@ class GoodInput(unittest.TestCase):
 	
 	def test_dfs_should_find_element(self):
 		start_node = self.nodes[0]
-		self.assertEqual(dfs.search(self.g, 'casper', start_node)[0], self.nodes[2])
+		self.assertEqual(dfs.search(self.g, 'casper', start_node)[0], self.nodes[1])
 	
 	def test_dfs_should_not_find_invalid_element(self):
 		start_node = self.nodes[0]
 		self.assertIsNone(dfs.search(self.g, 'borat', start_node))
 
+	def test_dfs_iterative_deepening_should_find_element(self):
+		start_node = self.nodes[0]
+		self.assertEqual(dfs_iterative_deepening.search(self.g, 'casper', start_node)[0], self.nodes[1])
+	
+	def test_dfs_iterative_deepening_should_find_shortest_path(self):
+		start_node = self.nodes[0]
+		self.assertEqual(dfs_iterative_deepening.search(self.g, 'casper', start_node)[1], self.shortest_path)
+	
+	def test_dfs_iterative_deepening_should_not_find_invalid_element(self):
+		start_node = self.nodes[0]
+		self.assertIsNone(dfs_iterative_deepening.search(self.g, 'borat', start_node))
+	
 class BadInput(unittest.TestCase):
 	pass
 

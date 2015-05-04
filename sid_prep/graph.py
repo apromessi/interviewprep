@@ -3,6 +3,12 @@ class Node(object):
 	def __init__(self, name):
 		self.name = name
 		self.neighbors = []
+	
+	def __str__(self):
+		return str(self.name)
+
+	def __repr__(self):
+		return 'Node(name=%r)' % (self.name)
 
 class Graph(object):
 	def __init__(self):
