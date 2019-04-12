@@ -64,8 +64,15 @@ class LinkedList(object):
         return current_node
 
 
-# test utility
-def create_cyclical_linked_list(linked_list):
+# test utilities
+def generate_linked_list(my_list):
+    linked_list = LinkedList(LinkedListItem(my_list[0]))
+    for item in my_list[1:]:
+        linked_list.add_to_head(item)
+    return linked_list
+
+
+def create_fully_cyclical_linked_list(linked_list):
     if not linked_list.head.next:
         linked_list.add_to_head('new_head')
 
@@ -73,13 +80,26 @@ def create_cyclical_linked_list(linked_list):
     tail_node.next = linked_list.head
 
 
+def create_partially_cyclical_linked_list(linked_list):
+    my_list = [1, 2, 3, 4, 5]
+
+    # add some items to the linked list
+    if not linked_list.head.next:
+        linked_list = generate_linked_list(my_list)
+
+    linked_list.head.next.next.next = linked_list.head.next
+
+
 def has_cycle(linked_list):
     has_cycle = False
     current_node = linked_list.head
 
+    nodes = set()
+
     while current_node.next and has_cycle is False:
-        if current_node.next == linked_list.head:
+        if current_node in nodes:
             has_cycle = True
+        nodes.add(current_node)
         current_node = current_node.next
 
     return has_cycle
@@ -90,11 +110,14 @@ def main():
     print(has_cycle(linked_list), 'should be False')
 
     my_list = [7, 5, 3, 9, 0, 3, 1, 2, 'b', 'a', 'c']
-    for item in my_list:
-        linked_list.add_to_head(item)
+    linked_list = generate_linked_list(my_list)
     print(has_cycle(linked_list), 'should be False')
 
-    create_cyclical_linked_list(linked_list)
+    create_fully_cyclical_linked_list(linked_list)
+    print(has_cycle(linked_list), 'should be True')
+
+    linked_list = generate_linked_list(my_list)
+    create_partially_cyclical_linked_list(linked_list)
     print(has_cycle(linked_list), 'should be True')
 
 if __name__ == '__main__':
